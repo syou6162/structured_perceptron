@@ -56,8 +56,12 @@ sub extract_features {
     my ( $sentence, $index, $pos_prev, $pos_next ) = @_;
     my $features = List::Rubyish->new;
     my $w = $index < $sentence->size ? $sentence->[$index]->{w} : "EOS";
+    my $w_prev = $index - 1 >= 0 ? $sentence->[$index - 1]->{w} : "";
+    my $w_next = $index + 1 < $sentence->size ? $sentence->[$index + 1]->{w} : "";
     $features->push( "transition_feature:" . $pos_prev . "+" . $pos_next );
     $features->push( "emission_feature:" . $pos_next . "+" . $w );
+    $features->push( "emission_feature_prev:" . $pos_next . "+" . $w_prev );
+    $features->push( "emission_feature_next:" . $pos_next . "+" . $w_next );
     $features;
 }
 
