@@ -7,13 +7,6 @@ use List::MoreUtils;
 use List::Rubyish;
 use Clone qw(clone);
 
-use Data::Dumper qw/Dumper/;
-{
-    package Data::Dumper;
-    sub qquote {return shift;}
-}
-$Data::Dumper::Useperl = 1;
-
 sub parse_line {
     my $line     = shift;
     my $sentence = List::Rubyish->new;
