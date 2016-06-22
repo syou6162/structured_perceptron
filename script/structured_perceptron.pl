@@ -200,7 +200,7 @@ for my $iter ( 0 .. 10 ) {
     for my $gold ( List::Util::shuffle @$train_data) {
         my $predict = argmax($gold, $weight, $pos_labels);
         # 正解と一致したら重みベクトルは更新しない
-        unless ( pos_labels_str($gold) eq pos_labels_str($predict) ) {
+        if ( pos_labels_str($gold) ne pos_labels_str($predict) ) {
             learn( $weight, $cum_weight, $gold, $predict, $n, $pos_labels );
             $n++;
         }
