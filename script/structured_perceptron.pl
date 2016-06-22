@@ -137,15 +137,15 @@ sub learn {
         my $features = extract_features( $sentence, $index, $prev_pos, $next_pos );
         $gold_features->concat($features);
     }
-    my $predict_sentence = argmax( $sentence, $weight, $pos_labels );
-    my $predict_features = List::Rubyish->new;
-    for my $index ( 0 .. $sentence->size - 1 ) {
-        my $prev_pos = $predict_sentence->[ $index - 1 ]->{pos} || "BOS";
-        my $next_pos = $predict_sentence->[$index]->{pos};
-        my $features = extract_features( $predict_sentence, $index, $prev_pos, $next_pos );
-        $predict_features->concat($features);
-    }
+    return $gold_features;
+}
 
+sub learn {
+    my ( $weight, $cum_weight, $sentence, $predict_sentence, $n, $pos_labels ) = @_;
+    my $gold_features = get_features($sentence);
+    my $predict_features = get_features($predict_sentence);
+
+    # update weight
     for my $feature (@$gold_features) {
         $weight->{$feature} += 1;
         $cum_weight->{$feature} += $n;
