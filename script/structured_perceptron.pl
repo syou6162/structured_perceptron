@@ -128,8 +128,8 @@ sub forward_step {
     $best_edge;
 }
 
-sub learn {
-    my ( $sentence, $weight, $cum_weight, $n, $pos_labels ) = @_;
+sub get_features {
+    my $sentence = shift;
     my $gold_features = List::Rubyish->new;
     for my $index ( 0 .. $sentence->size - 1 ) {
         my $prev_pos = $sentence->[ $index - 1 ]->{pos} || "BOS";
@@ -199,8 +199,9 @@ for my $iter ( 0 .. 10 ) {
     print "Iter: $iter\n";
     for my $gold ( List::Util::shuffle @$train_data) {
         my $predict = argmax($gold, $weight, $pos_labels);
+        # 正解と一致したら重みベクトルは更新しない
         unless ( pos_labels_str($gold) eq pos_labels_str($predict) ) {
-            learn( $gold, $weight, $cum_weight, $n, $pos_labels );
+            learn( $weight, $cum_weight, $gold, $predict, $n, $pos_labels );
             $n++;
         }
     }
